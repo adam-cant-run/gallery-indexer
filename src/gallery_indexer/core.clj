@@ -54,13 +54,19 @@
 
 (def options-defn
   [["-d" "--directory DIR" "Directory containing image files"
-    :default "."]])
+    :default "."]
+   ["-h" "--help"]])
 
 (defn -main
   "Generates an index page of thumbnails"
   [& args]
   (let [parsed-options (parse-opts args options-defn)
         directory (:directory (:options parsed-options))]
+
+    (when (:help (:options parsed-options))
+      (println (:summary parsed-options))
+      (System/exit 1))
+
     (let [img-files (list-image-files directory)]
       (doseq [img img-files] ;; Generate thumbnails, non-lazy
         (gen-thumbnail img))
